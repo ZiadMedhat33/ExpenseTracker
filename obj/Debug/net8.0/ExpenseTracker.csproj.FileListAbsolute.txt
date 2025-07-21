@@ -89,3 +89,5 @@ D:\ExpenseTracker\ExpenseTracker\bin\Debug\net8.0\LinqKit.Core.dll
 D:\ExpenseTracker\ExpenseTracker\bin\Debug\net8.0\LinqKit.Microsoft.EntityFrameworkCore.dll
 D:\ExpenseTracker\ExpenseTracker\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\ExpenseTracker\ExpenseTracker\bin\Debug\net8.0\OpenAI.dll
+D:\ExpenseTracker\ExpenseTracker\bin\Debug\net8.0\appsettings.Template.json
+D:\ExpenseTracker\ExpenseTracker\obj\Debug\net8.0\ExpenseTracker.sourcelink.json

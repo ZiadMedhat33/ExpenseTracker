@@ -9,10 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configuration and DB setup
 var config = builder.Configuration;
-var connectionString = config.GetConnectionString("DefaultConnection");
+//var connectionString = config.GetConnectionString("DefaultConnection"); that is for sql server or any other type of server but here what i will use is sqllite
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlite("Data Source=app.db"));
 
 // Repositories & Services
 builder.Services.AddScoped<UserRepository>();
@@ -77,10 +77,8 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// ⚠️ For demo: delete and recreate DB on startup
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-await context.Database.EnsureDeletedAsync();   // Deletes the database
 await context.Database.EnsureCreatedAsync();   // Recreates it
 
 // ✅ Swagger middleware
