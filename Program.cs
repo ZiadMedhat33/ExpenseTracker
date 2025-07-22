@@ -7,11 +7,6 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
-    serverOptions.ListenAnyIP(int.Parse(port));
-});
 
 
 // Configuration and DB setup
