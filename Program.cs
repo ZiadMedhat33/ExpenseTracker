@@ -7,6 +7,13 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "3000";
+    serverOptions.ListenAnyIP(int.Parse(port));
+});
+
+
 // Configuration and DB setup
 var config = builder.Configuration;
 //var connectionString = config.GetConnectionString("DefaultConnection"); that is for sql server or any other type of server but here what i will use is sqllite
