@@ -1,0 +1,730 @@
+{
+	"info": {
+		"_postman_id": "9d441729-b49f-4394-a300-77eaec6948d6",
+		"name": "ExpenseTracker - API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40542706"
+	},
+	"item": [
+		{
+			"name": "Register User - Happy Path",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/User/register/testuser1/password1234",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"User",
+						"register",
+						"testuser1",
+						"password1234"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User - Username Too Short",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/User/register/abc/password1234",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"User",
+						"register",
+						"abc",
+						"password1234"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User - Password Too Short",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/User/register/testuser2/123",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"User",
+						"register",
+						"testuser2",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User - Username Already Taken",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/User/register/testuser1/password1234",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"User",
+						"register",
+						"testuser1",
+						"password1234"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User - Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    try {",
+							"        const json = pm.response.json();",
+							"        if (json.token) {",
+							"            pm.collectionVariables.set(\"jwtToken\", json.token);",
+							"            console.log(\"✅ Token saved:\", json.token);",
+							"        } else {",
+							"            console.warn(\"⚠️ 'token' field not found in response JSON:\", json);",
+							"        }",
+							"    } catch (e) {",
+							"        console.error(\"❌ Failed to parse JSON response:\", e);",
+							"    }",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/User/login/testuser1/password1234",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"User",
+						"login",
+						"testuser1",
+						"password1234"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User - Wrong Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/User/login/testuser1/wrongpass",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"User",
+						"login",
+						"testuser1",
+						"wrongpass"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User - Success",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\": 1, \"username\": \"testuser1_updated\", \"password\": \"newpass12345\"}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/User/update",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"User",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User - No Authorization",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\": 1, \"username\": \"testuser1_updated\", \"password\": \"newpass12345\"}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/User/update",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"User",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User - Mismatched ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\": 9999, \"username\": \"anotherUser\", \"password\": \"newpass12345\"}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/User/update",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"User",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Category (Happy Path)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/category/TestCategory",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"category",
+						"TestCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Expense - Groceries",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5051/expense/Groceries/100/Fresh vegetables/true/true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5051",
+					"path": [
+						"expense",
+						"Groceries",
+						"100",
+						"Fresh vegetables",
+						"true",
+						"true"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Expense - Leisure",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5051/expense/Leisure/50/Movie ticket/true/false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5051",
+					"path": [
+						"expense",
+						"Leisure",
+						"50",
+						"Movie ticket",
+						"true",
+						"false"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Expense - Electronics",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5051/expense/Electronics/200/Headphones/true/false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5051",
+					"path": [
+						"expense",
+						"Electronics",
+						"200",
+						"Headphones",
+						"true",
+						"false"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Expense - Utilities",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5051/expense/Utilities/120/Electricity bill/true/true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5051",
+					"path": [
+						"expense",
+						"Utilities",
+						"120",
+						"Electricity bill",
+						"true",
+						"true"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Expense - Clothing",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5051/expense/Clothing/75/Jacket/true/false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5051",
+					"path": [
+						"expense",
+						"Clothing",
+						"75",
+						"Jacket",
+						"true",
+						"false"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Duplicate Category (Expect 409)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/category/TestCategory",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"category",
+						"TestCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Non-Existent Category (Expect 404)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/category/NoSuchCategory",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"category",
+						"NoSuchCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Categories",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/category/UserCategories",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"category",
+						"UserCategories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Expense - Valid",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/expense/Food/100/Lunch at work/true/true",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"expense",
+						"Food",
+						"100",
+						"Lunch at work",
+						"true",
+						"true"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Expense - Duplicate Category",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/expense/TestCategory/50/Snack/true/false",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"expense",
+						"TestCategory",
+						"50",
+						"Snack",
+						"true",
+						"false"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Expense - Unauthorized User",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\": 1, \"userId\": 9999, \"categoryName\": \"Leisure\", \"amount\": 20, \"description\": \"Bus fare\", \"isSpending\": true, \"isEssential\": false, \"date\": \"2025-07-18T00:00:00Z\"}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/expense/update",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"expense",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Expenses - Empty Filters",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/expense/getExpenses",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"expense",
+						"getExpenses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Filter Expenses by Category (Groceries)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwtToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n{\r\n  \"type\": \"category\",\r\n  \"data\": {\r\n    \"CategoryName\": \"Groceries\"\r\n  }\r\n}\r\n]\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5051/expense/getExpenses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5051",
+					"path": [
+						"expense",
+						"getExpenses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Category (User-defined)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5051/category/MyCustomCategory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5051",
+					"path": [
+						"category",
+						"MyCustomCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Expense (ID = 1)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5051/expense/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5051",
+					"path": [
+						"expense",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Category (Default - should fail)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5051/category/Groceries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5051",
+					"path": [
+						"category",
+						"Groceries"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000"
+		},
+		{
+			"key": "jwtToken",
+			"value": ""
+		}
+	]
+}
